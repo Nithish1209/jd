@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <br>1) select empno, ename, sal, dname, grade from emp e, dept d, salgrade where e.deptno=d.deptno and e.sal betweens.losal and s.hisal ande.job<>’CLERK’ order by sal;
+<br><br>
+2) SELECT ename FROM emp WHERE ename LIKE '%l%l%';
+<br><br>
+3) declare
+    n number:=&n;
+    m number:=n;
+    rev number:=0;
+    r number;
+begin
+    while n>0
+    loop
+        r:=mod(n,10);  
+        rev:=(rev*10)+r;
+        n:=trunc(n/10);
+    end loop;
+    
+    if m=rev
+    then
+        dbms_output.put_line('number is palindrome');
+    elsez
+        dbms_output.put_line('number is not palindrome');
+    end if;
+end;
+/
+<br><br>
+4) create table customers(id number(2),name varchar2(30),age number(2),address varchar2(20),salary number(6));
+insert into customers values(&id,'&name',&age,'&address',&salary);
+
+        ID NAME                                  AGE ADDRESS                  SALARY
+---------- ------------------------------ ---------- -------------------- ----------
+         1 rishitha                               18 warangal                  15000
+         2 sumith                                 22 texas                     30000
+         3 avinash                                26 banglore                  25000
+         4 rithvik                                14 warangal                   5000
+         5 akshith                                15 hyderabad                  7000
+         6 chaitra                                10 hyderabad                  2500
+CREATE OR REPLACE TRIGGER display_salary_changes 
+BEFORE DELETE OR INSERT OR UPDATE ON customers 
+FOR EACH ROW 
+WHEN (NEW.ID > 0) 
+DECLARE 
+   sal_diff number; 
+BEGIN 
+   sal_diff := :NEW.salary  - :OLD.salary; 
+   dbms_output.put_line('Old salary: ' || :OLD.salary); 
+   dbms_output.put_line('New salary: ' || :NEW.salary); 
+   dbms_output.put_line('Salary difference: ' || sal_diff); 
+END; 
+/ 
+<br><br>
+5) select * from employees where hiredate='03-dec-1998';
+<br><br>
+6) select * from sailors where boat_color='red' order by age;
+<br><br>
+7) declare
+n number;
+fac number:=1;
+i number;
+begin
+n:=&n;
+for i in 1..n
+loop
+fac:=fac*i;
+end loop;
+dbms_output.put_line('factorial='||fac);
+end;
+/
+<br><br>
+8) CREATE OR REPLACE PACKAGE my_package AS
+   PROCEDURE get_employee_details(emp_id NUMBER);
+   FUNCTION calculate_salary(emp_id NUMBER) RETURN NUMBER;
+   CONSTANT min_salary CONSTANT NUMBER := 5000;
+END my_package;
+/
+
+
+<br><br>9)SELECT employee_number, employee_name, CONCAT('$', salary) AS salary_with_prefix
+FROM employees
+ORDER BY salary_with_prefix DESC;
+<br><br>
+10) SELECT department, COUNT(CASE WHEN designation = 'Clerk' THEN employee_name END) AS clerks_count, COUNT(CASE WHEN designation = 'Manager' THEN employee_name END) AS managers_count
+FROM employees
+GROUP BY department
+HAVING clerks_count > 2 AND managers_count > 2;
+<br><br>
+11) DECLARE
+  v_employee_number employees.employee_number%TYPE := &employee_number; -- Input parameter for employee number
+  v_salary employees.salary%TYPE; -- Variable to store employee salary
+  v_found BOOLEAN := FALSE; -- Flag to track whether the employee number was found
+  
+  CURSOR c_employee IS -- Cursor to retrieve the salary of the employee with the given employee number
+    SELECT salary
+    FROM employees
+    WHERE employee_number = v_employee_number;
+BEGIN
+  OPEN c_employee;
+  FETCH c_employee INTO v_salary;
+  
+  IF c_employee%FOUND THEN
+    v_found := TRUE;
+    DBMS_OUTPUT.PUT_LINE('Salary of employee ' || v_employee_number || ' is: $' || v_salary);
+  END IF;
+  
+  IF NOT v_found THEN
+    DBMS_OUTPUT.PUT_LINE('Employee ' || v_employee_number || ' not found');
+  END IF;
+  
+  CLOSE c_employee;
+END;
+/
+<br><br>
+12) 
+1...DDL is used to create, alter, and drop database objects like tables, indexes, and views, while DML is used to insert, update, and delete data from the database. For example:
+DDL statement to create a new table:
+CREATE TABLE employees (
+  employee_id NUMBER,
+  first_name VARCHAR2(50),
+  last_name VARCHAR2(50),
+  salary NUMBER(10,2)
+);
+DML statement to insert data into the table:
+INSERT INTO employees (employee_id, first_name, last_name, salary)
+VALUES (1, 'John', 'Doe', 50000);
+<br><br>
+2...DDL affects the schema of the database, while DML affects the content of the database. DDL statements define the structure of the database, including its tables, columns, constraints, and indexes, while DML statements modify or retrieve the data stored in the database. For example:
+DDL statement to add a new column to a table:
+ALTER TABLE employees ADD hire_date DATE;
+DML statement to update the salary of an employee:
+UPDATE employees SET salary = 55000 WHERE employee_id = 1;
+<br><br>
+3...DDL statements are auto-committed and cannot be rolled back, while DML statements are transactional and can be rolled back if necessary. For example:
+DDL statement to drop a table:
+DROP TABLE employees;
+DML statement to delete data from a table:
+DELETE FROM employees WHERE employee_id = 1;
+<br><br>
+13) SELECT department_id, AVG(salary) AS avg_salary
+FROM employees
+GROUP BY department_id
+HAVING COUNT(*) > 3;
+<br><br>
+14) SELECT * 
+FROM employees 
+WHERE TRUNC(MONTHS_BETWEEN(SYSDATE, hire_date) / 12) >= 30;
+<br><br>
+15) eclare
+n number;
+i number;
+rev number:=0;
+r number;
+begin
+n:=&n;
+while n>0
+loop
+r:=mod(n,10);
+rev:=(rev*10)+r;
+n:=trunc(n/10);
+end loop;
+dbms_output.put_line('reverse is '||rev);
+end;
+/
+<br><br>
+16) -- First, create a package specification
+CREATE OR REPLACE PACKAGE my_package IS
+  PROCEDURE procedure_one;
+  FUNCTION function_one RETURN NUMBER;
+END my_package;
+/
+<br><br>
+-- Next, create the package body
+CREATE OR REPLACE PACKAGE BODY my_package IS
+  PROCEDURE procedure_one IS
+  BEGIN
+    DBMS_OUTPUT.PUT_LINE('Hello from procedure_one!');
+  END;
+<br><br>
+  FUNCTION function_one RETURN NUMBER IS
+    my_number NUMBER := 10;
+  BEGIN
+    RETURN my_number;
+  END;
+END my_package;
+/
+<br><br>
+-- Finally, create the program that uses the package
+DECLARE
+  my_var NUMBER;
+BEGIN
+  my_package.procedure_one;
+  my_var := my_package.function_one;
+  DBMS_OUTPUT.PUT_LINE('my_var = ' || my_var);
+END;
+/
+<br><br>
+17) select * from emp where age between 50 and 60;
+<br><br>
+18) DECLARE  
+   total_rows number(2); 
+BEGIN 
+   UPDATE customers 
+   SET salary = salary + 500; 
+   IF sql%notfound THEN 
+      dbms_output.put_line('no customers selected'); 
+   ELSIF sql%found THEN 
+      total_rows := sql%rowcount;
+      dbms_output.put_line( total_rows || ' customers selected '); 
+   END IF;  
+END; 
+/  
+<br><br>
+19) declare
+    n number:=&n;
+    s number:=0;
+    r number;
+    len number;
+    m number;
+begin
+    m:=n;
+ 
+    len:=length(to_char(n));
+    
+    while n>0
+    loop
+        r:=mod(n,10);
+        s:=s+power(r,len);
+        n:=trunc(n/10);
+    end loop;
+    
+    if m=s
+    then
+        dbms_output.put_line('armstrong number');
+    else
+        dbms_output.put_line('not armstrong number');
+    end if;
+    
+end;
+/
+<br><br>
+20) 3 ways to insert:
+~ Only single row at a time:
+SYNTAX : insert into <tablename> values(<value list>);
+EX: insert into pets values('lee know','cat',3);
+<br><br>
+~ Many rows one by one
+SYNTAX : insert into <tablename> values(<&column list>); 
+EX: insert into pets values('&name','&pet',no_of_pets);
+<br><br>
+~ Data in specific fields only
+SYNTAX : insert into pets(name,no_of_pets) values('&name',&no_of_pets);
+<br><br>
+21) SELECT EXTRACT(YEAR FROM hire_date) AS hire_year, COUNT(*) AS num_employees
+FROM employees
+GROUP BY EXTRACT(YEAR FROM hire_date)
+ORDER BY num_employees DESC
+FETCH FIRST 1 ROW ONLY;
+<br><br>
+22) SELECT department_id, job_id, AVG(salary/12) AS avg_monthly_salary
+FROM employees
+GROUP BY department_id, job_id;
+<br><br>
+25) SELECT department_id, AVG(salary) AS avg_salary
+FROM employees
+GROUP BY department_id
+HAVING COUNT(*) > 3;
+<br><br>
+26) SELECT job_id, AVG(salary) AS avg_salary
+FROM employees
+GROUP BY job_id
+ORDER BY avg_salary DESC
+FETCH FIRST 1 ROW ONLY;
+<br><br>
+29) ALTER TABLE employees MODIFY department_code INT DEFAULT 
+    CASE department_code 
+        WHEN 0 THEN 'Financial Department' 
+        WHEN 20 THEN 'Account Department' 
+        WHEN 30 THEN 'Management Information System' 
+        WHEN 40 THEN 'Electronic Data Processing'
+        ELSE NULL 
+    END;
+<br><br>
+30) SELECT e.ename AS "Employee Name", d.dname AS "Department Name", e.sal AS "Salary", e.hiredate AS "date-hired"
+FROM emp e
+JOIN dept d ON e.deptno = d.deptno
+WHERE e.deptno = 20;
+<br><br>
+31) DECLARE
+  v_empno customers.id%TYPE := &employee_number;
+  v_sal customers.salary%TYPE;
+BEGIN
+  IF v_empno IS NULL THEN
+    DBMS_OUTPUT.PUT_LINE('Employee number is required.');
+  ELSE
+    SELECT salary INTO v_sal FROM customers WHERE id = v_empno;
+    IF v_sal IS NULL THEN
+      DBMS_OUTPUT.PUT_LINE('Employee number ' || v_empno || ' not found.');
+    ELSE
+      DBMS_OUTPUT.PUT_LINE('Salary for employee number ' || v_empno || ': ' || v_sal);
+    END IF;
+  END IF;
+END;
+<br><br>
+32) select * from dept where emp_no is null;
+<br><br>
+33) select name,job,salary,grade,dept_name from customers where job <> 'clerk' order by salary desc;
+<br><br>
+SELECT e.ename AS "Employee Name", e.job AS "Job Title", e.sal AS "Salary", s.grade AS "Grade", d.dname AS "Department Name"
+FROM emp e
+JOIN salgrade s ON e.sal BETWEEN s.losal AND s.hisal
+JOIN dept d ON e.deptno = d.deptno
+WHERE e.job <> 'CLERK'
+ORDER BY e.sal DESC;
+<br><br>
+35) DECLARE
+  CURSOR cust_cursor IS
+    SELECT id, name, address, salary FROM customers;
+  cust_rec cust_cursor%ROWTYPE;
+BEGIN
+  OPEN cust_cursor;
+  LOOP
+    FETCH cust_cursor INTO cust_rec;
+    EXIT WHEN cust_cursor%NOTFOUND;
+    DBMS_OUTPUT.PUT_LINE('Customer' || cust_rec.id || ':');
+    DBMS_OUTPUT.PUT_LINE('Name: ' || cust_rec.name);
+    DBMS_OUTPUT.PUT_LINE('address: ' || cust_rec.address);
+    DBMS_OUTPUT.PUT_LINE('Salary: ' || cust_rec.salary);
+  END LOOP;
+  CLOSE cust_cursor;
+END;
+/
+<br><br>
+38) SELECT * FROM employees 
+WHERE salary > 
+ALL(SELECT max(salary)FROM employees GROUP BY department_id);
+
+<br><br>39) DECLARE
+   v_avg_salary NUMBER;
+BEGIN
+   -- Calculate the average salary of all employees
+   SELECT AVG(salary) INTO v_avg_salary FROM employees;
+   
+   -- Display employee details whose salary is greater than the average salary
+   FOR emp IN (SELECT * FROM employees WHERE salary > v_avg_salary)
+   LOOP
+      DBMS_OUTPUT.PUT_LINE('Employee ID: ' || emp.employee_id || 
+                           ' Name: ' || emp.first_name || ' ' || emp.last_name ||
+                           ' Salary: ' || emp.salary);
+   END LOOP;
+END;
+<br><br>
+41) select * from employees where salary > (select max(salary) from employees where deptno=30)
+<br><br>
+42) SELECT e.*
+FROM employees e
+WHERE e.salary > (
+  SELECT AVG(salary)
+  FROM employees
+  WHERE deptno = e.deptno
+);
+<br><br>
+44) DCL stands for Data Control Language, which is a subset of SQL used for managing user access and permissions in a database
+GRANT: The GRANT command is used to give specific permissions or access rights to a user or role
+GRANT permission_name ON object_name TO user_name;
+REVOKE: The REVOKE command is used to remove specific permissions or access rights from a user or role.
+REVOKE permission_name ON object_name FROM user_name;
+
+SYNTAX: ALTER TABLE table_name RENAME COLUMN old_column_name TO new_column_name;
+EX : ALTER TABLE my_table RENAME COLUMN old_column TO new_column;
+<br><br>
+48) 
+Primary key constraint: A primary key is a column or set of columns that uniquely identifies each row in a table. The primary key constraint ensures that the primary key column(s) has unique and non-null values for each row in the table.
+SYNTAX <br>
+CREATE TABLE table_name (
+  column1 datatype PRIMARY KEY,
+  column2 datatype,
+  ...
+);<br><br>
+EXAMPLE
+CREATE TABLE employees (
+  employee_id INT PRIMARY KEY,
+  employee_name VARCHAR(50),
+  department_id INT,
+  ...
+);
+<br><br>
+Foreign key constraint: A foreign key is a column or set of columns that refers to a primary key column(s) in another table. The foreign key constraint ensures that the foreign key values in a table match the corresponding primary key values in the referenced table
+SYNTAX
+CREATE TABLE child_table (
+   child_column1 datatype,
+   child_column2 datatype,
+   ...
+   CONSTRAINT fk_name
+   FOREIGN KEY (child_column_name)
+   REFERENCES parent_table (parent_column_name)
+   ON DELETE [CASCADE | SET NULL | NO ACTION]
+   ON UPDATE [CASCADE | SET NULL | NO ACTION]
+);<br><br>
+EXAMPLE
+CREATE TABLE departments (
+  department_id INT PRIMARY KEY,
+  department_name VARCHAR(50)
+);
+<br><br>
+CREATE TABLE employees (
+  employee_id INT PRIMARY KEY,
+  employee_name VARCHAR(50),
+  department_id INT,
+  CONSTRAINT fk_department
+    FOREIGN KEY (department_id)
+    REFERENCES departments(department_id)
+    ON DELETE CASCADE
+);
+<br><br>
+Unique constraint: A unique constraint ensures that a column or set of columns has unique values for each row in a table. Unlike a primary key constraint, a unique constraint allows null values.
+SYNTAX
+CREATE TABLE table_name (
+   column1 datatype,
+   column2 datatype,
+   ...
+   CONSTRAINT constraint_name UNIQUE (column_name1, column_name2, ...)
+);<br><br>
+EXAMPLE
+CREATE TABLE customers (
+  customer_id INT PRIMARY KEY,
+  customer_name VARCHAR(50),
+  email VARCHAR(50) UNIQUE,
+  phone VARCHAR(20) UNIQUE
+);
+<br><br>
+Check constraint: A check constraint ensures that the values in a column meet a specified condition.
+SYNTAX
+CREATE TABLE table_name (
+   column1 datatype,
+   column2 datatype,
+   ...
+   CONSTRAINT constraint_name CHECK (condition)
+);<br><br>
+EXAMPLE
+CREATE TABLE employees (
+  employee_id INT PRIMARY KEY,
+  employee_name VARCHAR(50),
+  salary DECIMAL(10,2),
+  hire_date DATE,
+  CONSTRAINT chk_salary CHECK (salary >= 0),
+  CONSTRAINT chk_hire_date CHECK (hire_date <= SYSDATE)
+);
+<br><br>
+Not null constraint: A not null constraint ensures that a column does not contain null values.
+SYNTAX
+CREATE TABLE table_name (
+   column1 datatype NOT NULL,
+   column2 datatype NOT NULL,
+   ...
+);<br><br>
+EXAMPLE
+CREATE TABLE students (
+  student_id INT PRIMARY KEY,
+  student_name VARCHAR(50) NOT NULL,
+  email VARCHAR(50) NOT NULL,
+  age INT NOT NULL
+);
+<br><br>
+Default constraint: A default constraint specifies a default value for a column if no value is specified when a new row is inserted into the table.
+SYNTAX
+CREATE TABLE table_name (
+   column1 datatype DEFAULT default_value,
+   column2 datatype DEFAULT default_value,
+   ...
+);<br><br>
+EXAMPLE
+CREATE TABLE orders (
+  order_id INT PRIMARY KEY,
+  customer_id INT NOT NULL,
+  order_date DATE DEFAULT SYSDATE,
+  total_amount DECIMAL(10,2) DEFAULT 0.00
+);
+<br><br>
+49) declare
+n number := &n;
+begin
+if n < 0 then
+dbms_output.put_line(n|| ' is negative');
+elsif n > 0 then
+dbms_output.put_line(n|| ' is positive');
+else
+dbms_output.put_line(n|| ' is zero');
+end if;
+end;
+/
+<br><br>
+50) declare
+a number := &a;
+b number := &b;
+begin
+while a <= b loop
+if a mod 2 = 0 then
+dbms_output.put_line (a);
+end if;
+a := a + 1;
+end loop;
+end;
+/
+<br><br>
+51) DECLARE
+  v_name VARCHAR2(50);
+BEGIN
+  SELECT name INTO v_name
+  FROM employees
+  WHERE salary > 50000;
+  
+  dbms_output.put_line('Employee name: ' || v_name);
+EXCEPTION
+  WHEN TOO_MANY_ROWS THEN
+    dbms_output.put_line('Error: too many rows returned by query');
+END;
+<br><br>
+53) DECLARE
+    v_account_no ACCOUNT.ACCOUNT_NO%TYPE;
+    v_debit_amt NUMBER(10,2);
+    v_balance NUMBER(10,2);
+BEGIN
+    -- Accept account number and debit amount from user
+    v_account_no := &enter_account_no;
+    v_debit_amt := &enter_debit_amt;
+
+    -- Check if account exists
+    SELECT BALANCE INTO v_balance FROM ACCOUNT WHERE ACCOUNT_NO = v_account_no;
+
+    IF v_balance IS NULL THEN
+        DBMS_OUTPUT.PUT_LINE('Account does not exist.');
+    ELSE
+        -- Check if minimum balance of Rs. 500/- is maintained
+        IF v_balance - v_debit_amt < 500 THEN
+            DBMS_OUTPUT.PUT_LINE('Minimum balance of Rs. 500/- must be maintained.');
+        ELSE
+            -- Debit amount from account
+            UPDATE ACCOUNT SET BALANCE = BALANCE - v_debit_amt WHERE ACCOUNT_NO = v_account_no;
+            DBMS_OUTPUT.PUT_LINE('Amount debited successfully.');
+        END IF;
+    END IF;
+END;
+<br><br>
+54)
+`GETDATE()` - Returns the current system date and time in SQL Server
+SELECT GETDATE() as CurrentDateTime;
+<br><br>
+DATEADD() - Adds a specified time interval to a date
+SELECT DATEADD(MONTH, 3, '2023-04-08') as NewDate;
+<br><br>
+DATEDIFF() - Returns the number of date/time boundaries crossed between two dates
+SELECT DATEDIFF(DAY, '2022-12-25', '2023-01-01') as DaysBetween;
+<br><br>
+MONTH() - Returns the month of the year for a given date
+SELECT MONTH('2023-04-08') as MonthNumber;
+<br><br>
+DATE_FORMAT() - Formats a date according to a specified format string in MySQL
+SELECT DATE_FORMAT('2023-04-08', '%W, %M %e, %Y') as FormattedDate;
+<br><br>
+55) -- create the CUSTOMERS table
+CREATE TABLE CUSTOMERS (
+  customer_id INT PRIMARY KEY,
+  customer_name VARCHAR(50)
+);<br><br>
+-- create the ORDERS table with a foreign key reference to CUSTOMERS table
+CREATE TABLE ORDERS (
+  order_id INT PRIMARY KEY,
+  order_date DATE,
+  customer_id INT,
+  FOREIGN KEY (customer_id)
+    REFERENCES CUSTOMERS(customer_id)
+    ON DELETE CASCADE
+);<br><br>
+-- insert sample data into CUSTOMERS table
+INSERT INTO CUSTOMERS VALUES (1, 'John Doe');
+INSERT INTO CUSTOMERS VALUES (2, 'Jane Smith');
+-- insert sample data into ORDERS table
+INSERT INTO ORDERS VALUES (1001, '2023-04-08', 1);
+INSERT INTO ORDERS VALUES (1002, '2023-04-07', 1);
+INSERT INTO ORDERS VALUES (1003, '2023-04-06', 2);
+-- delete a customer from the CUSTOMERS table
+DELETE FROM CUSTOMERS WHERE customer_id = 1;
+-- select all data from the ORDERS table to see the effect of the constraint
+SELECT * FROM ORDERS;
+<br><br>
+58) 
+LEN: Returns the number of characters in a string.
+SELECT LEN('Hello world') from dual; -- Output: 11
+<br><br>
+SUBSTRING: Returns a specified portion of a string.
+SELECT SUBSTRING('Hello world', 7, 5) from dual;-- Output: 'world'
+
+<br><br>CONCAT: Concatenates two or more strings into a single string.
+SELECT CONCAT('Hello', ' ', 'world') from dual;-- Output: 'Hello world'
+<br><br>
+LOWER: Converts all characters in a string to lowercase.
+SELECT LOWER('HELLO WORLD') from dual;-- Output: 'hello world'
+<br><br>
+UPPER: Converts all characters in a string to uppercase
+SELECT UPPER('Hello world') from dual;-- Output: 'HELLO WORLD'
+<br><br>
+59)CREATE SEQUENCE sequence_1
+start with 1
+increment by 1
+minvalue 0
+maxvalue 100
+cycle;
+<br><br>
+64) select * from employees where length(ename)=6;
+<br><br>
+65) 
+TRUNCATE: This command removes all the data from a table, but keeps the structure and metadata intact. It's faster and uses less transaction log space than DELETE. Here's an example:
+TRUNCATE TABLE my_table;
+<br><br>
+DELETE: This command removes specific rows from a table based on a condition, but leaves the structure and metadata of the table intact. It's slower and uses more transaction log space than TRUNCATE. Here's an example:
+DELETE FROM my_table WHERE id = 3;
+<br><br>
+66) DECLARE
+  -- declare variables
+  n NUMBER := &n; -- set N to 5 (you can change this to any number you want)
+  i NUMBER := 1;
+  CURSOR emp_cur IS
+    SELECT ename, deptno, job, sal
+    FROM emp
+    ORDER BY sal DESC; -- order employees by salary in descending order
+BEGIN
+  -- loop through the cursor and display information for the top N employees
+  FOR emp_rec IN emp_cur LOOP
+    EXIT WHEN i > n; -- exit loop when i exceeds N
+    DBMS_OUTPUT.PUT_LINE(emp_rec.ename || ', ' || emp_rec.deptno || ', ' || emp_rec.job || ', ' || emp_rec.sal);
+    i := i + 1;
+  END LOOP;
+END;
+<br><br>
+67) SELECT a.ROLL_NO , b.NAME
+FROM Student a, Student b
+WHERE a.ROLL_NO < b.ROLL_NO;
+<br><br>
+69) CREATE TABLE orders (
+  order_id INT PRIMARY KEY,
+  customer_id INT,
+  product_id INT,
+  FOREIGN KEY (customer_id) REFERENCES customers (customer_id) ON DELETE CASCADE,
+  FOREIGN KEY (product_id) REFERENCES products (product_id) ON DELETE CASCADE
+);
+<br><br>
+70) a table is a physical structure that stores data on disk, while a view is a logical structure that presents a virtual representation of data based on the result of an SQL query.
+CREATE VIEW high_paid_employees AS
+SELECT id, name, salary
+FROM employees
+WHERE salary > 100000;
+the high_paid_employees view is based on the employees table and only shows employees with a salary greater than $100,000. The view does not store any data on disk but rather presents a logical representation of the data in the employees table that meets the specified criteria.
+<br><br>
+73) COMMIT: This command is used to permanently save changes made during a transaction to the database. Once a transaction is committed, the changes become permanent and cannot be undone.
+<br><br>
+ROLLBACK: This command is used to undo any changes made during a transaction and restore the database to its previous state. Once a transaction is rolled back, any changes made during the transaction are discarded and the database is restored to its previous state.
+<br><br>
+START TRANSACTION;
+UPDATE accounts SET balance = balance - 100 WHERE id = 123;
+UPDATE accounts SET balance = balance + 100 WHERE id = 456;
+COMMIT;
+<br><br>
+START TRANSACTION;
+UPDATE accounts SET balance = balance - 100 WHERE id = 123;
+UPDATE accounts SET balance = balance + 100 WHERE id = 999; -- invalid account ID
+ROLLBACK;
+<br><br>
+we attempt to transfer $100 from account 123 to an invalid account ID 999, which results in an error. We can then use the ROLLBACK command to undo the changes made during the transaction and restore the accounts table to its previous state.
+<br><br>
+77) COLUMN LEVEL FOREIGN KEY
+CREATE TABLE employees (
+  emp_id INT PRIMARY KEY,
+  emp_name VARCHAR(50),
+  dept_id INT,
+  CONSTRAINT fk_dept_id
+    FOREIGN KEY (dept_id) REFERENCES departments(dept_id)
+);
+<br><br>
+TABLE LEVEL FOREIGN KEY
+CREATE TABLE employees (
+  emp_id INT PRIMARY KEY,
+  emp_name VARCHAR(50),
+  dept_id INT
+);<br><br>
+CREATE TABLE departments (
+  dept_id INT PRIMARY KEY,
+  dept_name VARCHAR(50)
+);<br><br>
+ALTER TABLE employees ADD CONSTRAINT fk_dept_id
+  FOREIGN KEY (dept_id) REFERENCES departments(dept_id);
+<br><br>
+78) declare
+n number := &n;
+a number := 0;
+b number := 1;
+c number;
+begin
+dbms_output.put_line('The fibonacci series upto '||n||' terms is :');
+dbms_output.put_line(a);
+dbms_output.put_line(b);
+for i  in 3..n loop
+c := a+b;
+dbms_output.put_line(c);
+a:=b;
+b:=c;
+end loop;
+end;
+/
+<br><br>
+79) DECLARE
+  empno_in NUMBER := 7566; -- employee number to check
+  mgr_empno NUMBER;
+  emp_record employees%ROWTYPE;
+  CURSOR emp_cursor IS
+    SELECT e.*, d.dname
+    FROM employees e, departments d
+    WHERE e.deptno = d.deptno
+    AND e.mgr = mgr_empno;
+BEGIN
+  SELECT mgr INTO mgr_empno FROM employees WHERE empno = empno_in;
+  IF mgr_empno IS NOT NULL THEN
+    dbms_output.put_line('Employees under Manager ' || empno_in || ':');
+    OPEN emp_cursor;
+    LOOP
+      FETCH emp_cursor INTO emp_record;
+      EXIT WHEN emp_cursor%NOTFOUND;
+      dbms_output.put_line(emp_record.ename || ' (' || emp_record.job || ') in ' || emp_record.dname || ' (Dept ' || emp_record.deptno || '): $' || emp_record.sal);
+    END LOOP;
+    CLOSE emp_cursor;
+  ELSE
+    dbms_output.put_line('Employee ' || empno_in || ' is not a manager.');
+  END IF;
+END;
+<br><br>
+82) SELECT ename
+FROM emp
+WHERE job = 'ANALYST'
+AND deptno = 20
+AND ename LIKE 'M%';
+<br><br>
+83) DECLARE
+  CURSOR emp_cursor IS
+    SELECT ename, job, sal
+    FROM emp;
+BEGIN
+  FOR emp_record IN emp_cursor LOOP
+    dbms_output.put_line(emp_record.ename || ', ' || emp_record.job || ': $' || emp_record.sal);
+  END LOOP;
+END;
+
+<br><br>84) SELECT Customers.CustomerName, Orders.OrderID
+FROM Customers
+LEFT OUTER JOIN Orders
+ON Customers.CustomerID = Orders.CustomerID;
+<br><br>
+85) select * from customers where name like '%s' and job='manager';
+<br><br>
+86) SELECT DISTINCT manager_id FROM managers;
+<br><br>
+93) SELECT COUNT(*) as non_commissioned_employees 
+FROM employees 
+WHERE department_id = 0 
+AND commission_pct IS NULL;
+<br><br>
+94) SELECT *
+FROM employees
+WHERE job_title IN ('Clerk', 'Manager')
+ORDER BY employee_name ASC;
+<br><br>
+97) SELECT e.*
+FROM employees e
+JOIN departments d ON e.department_id = d.department_id
+WHERE d.department_name = 'Miller';
+<br><br>
+98) CREATE OR REPLACE PROCEDURE debit_account(
+    p_account_number IN BANK.account_number%TYPE,
+    p_amount IN BANK.balance%TYPE
+)
+IS
+    v_balance BANK.balance%TYPE;
+BEGIN
+UPDATE BANK SET balance = balance - p_amount
+    WHERE account_number = p_account_number;
+SELECT balance INTO v_balance
+    FROM BANK
+    WHERE account_number = p_account_number;
+DBMS_OUTPUT.PUT_LINE('Balance of account ' || p_account_number || ': ' || v_balance);
+END;
+
+<br><br>99) DECLARE
+   CURSOR emp_cur IS
+      SELECT employee_id, first_name, last_name
+      FROM employees;
+   v_emp_id employees.employee_id%TYPE;
+   v_first_name employees.first_name%TYPE;
+   v_last_name employees.last_name%TYPE;
+BEGIN
+   OPEN emp_cur;
+   IF emp_cur%ISOPEN THEN
+      DBMS_OUTPUT.PUT_LINE('Cursor is open');
+   ELSE
+      DBMS_OUTPUT.PUT_LINE('Cursor is not open');
+   END IF;
+   <br><br>
+   FETCH emp_cur INTO v_emp_id, v_first_name, v_last_name;
+   IF emp_cur%ISOPEN THEN
+      DBMS_OUTPUT.PUT_LINE('Cursor is still open after fetch');
+   ELSE
+      DBMS_OUTPUT.PUT_LINE('Cursor is closed after fetch');
+   END IF;
+<br><br>
+   CLOSE emp_cur;
+   IF emp_cur%ISOPEN THEN
+      DBMS_OUTPUT.PUT_LINE('Cursor is still open after close');
+   ELSE
+      DBMS_OUTPUT.PUT_LINE('Cursor is closed after close');
+   END IF;
+END;
+<br><br>
+100) DECLARE
+  CURSOR payslip_cur IS
+    SELECT employee_id, first_name, last_name, salary * 0.75 as net_pay
+    FROM employees;
+  v_emp_id employees.employee_id%TYPE;
+  v_first_name employees.first_name%TYPE;
+  v_last_name employees.last_name%TYPE;
+  v_net_pay NUMBER(10,2);
+BEGIN<br>
+  OPEN payslip_cur;
+ DBMS_OUTPUT.PUT_LINE('Employee Payslips:');
+  DBMS_OUTPUT.PUT_LINE('-------------------');
+  LOOP<br>
+    FETCH payslip_cur INTO v_emp_id, v_first_name, v_last_name, v_net_pay;
+    EXIT WHEN payslip_cur%NOTFOUND;
+    DBMS_OUTPUT.PUT_LINE('Employee ID: ' || v_emp_id);
+    DBMS_OUTPUT.PUT_LINE('Name: ' || v_first_name || ' ' || v_last_name);
+    DBMS_OUTPUT.PUT_LINE('Net Pay: ' || v_net_pay);
+    DBMS_OUTPUT.PUT_LINE('-------------------');
+  END LOOP;<br>
+  CLOSE payslip_cur;
+END;<br>
+
+<br><br>
+101) SELECT employee_id, first_name, last_name, salary
+FROM employees
+WHERE salary IN (
+  SELECT salary
+  FROM employees
+  WHERE last_name IN ('Scott', 'Ford')
+);
+<br><br>
+102) SELECT COUNT(*) as num_salesmen
+FROM employees
+WHERE job_title = 'Salesman' AND department_id = 80;
+<br><br>
+103) DECLARE
+  CURSOR salary_cursor (p_losal NUMBER, p_hisal NUMBER) IS
+    SELECT employee_id, first_name, last_name, salary
+    FROM employees
+    WHERE salary BETWEEN p_losal AND p_hisal;
+  v_employee_id employees.employee_id%TYPE;
+  v_first_name employees.first_name%TYPE;
+  v_last_name employees.last_name%TYPE;
+  v_salary employees.salary%TYPE;
+BEGIN<br>
+  OPEN salary_cursor(&losal, &hisal);
+  LOOP<br>
+    FETCH salary_cursor INTO v_employee_id, v_first_name, v_last_name, v_salary;
+    EXIT WHEN salary_cursor%NOTFOUND;
+    DBMS_OUTPUT.PUT_LINE(v_employee_id || ' ' || v_first_name || ' ' || v_last_name || ' ' || v_salary);
+  END LOOP;<br>
+  CLOSE salary_cursor;
+END;
+<br><br>
+108) DECLARE
+  CURSOR salary_cursor (p_losal NUMBER, p_hisal NUMBER) IS
+    SELECT employee_id, first_name, last_name, salary
+    FROM employees
+    WHERE salary BETWEEN p_losal AND p_hisal;
+  v_employee_id employees.employee_id%TYPE;
+  v_first_name employees.first_name%TYPE;
+  v_last_name employees.last_name%TYPE;
+  v_salary employees.salary%TYPE;
+BEGIN
+  OPEN salary_cursor(&losal, &hisal);
+  LOOP
+    FETCH salary_cursor INTO v_employee_id, v_first_name, v_last_name, v_salary;
+    EXIT WHEN salary_cursor%NOTFOUND;
+    DBMS_OUTPUT.PUT_LINE(v_employee_id || ' ' || v_first_name || ' ' || v_last_name || ' ' || v_salary);
+  END LOOP;
+  CLOSE salary_cursor;
+END;
+<br><br>
+109) A view in SQL is a virtual table that is based on the result set of a SELECT statement. Views can be used to simplify complex queries, provide a level of abstraction between the user and the underlying tables, and restrict access to certain data.
+SYNTAX:
+CREATE [OR REPLACE] VIEW view_name AS
+SELECT column1, column2, ...
+FROM table_name
+WHERE condition;<br><br>
+EXAMPLE:
+CREATE VIEW sales_summary AS
+SELECT year, month, SUM(amount) AS total_sales
+FROM sales
+GROUP BY year, month;
+<br><br>
+110) A sequence in SQL is an object that generates a series of unique values that can be used as the primary key for a table or any other purpose where unique values are required. A sequence is often used to generate a unique identifier for a table when a primary key value is not supplied by the application.
+SYNTAX:<br><br>
+CREATE SEQUENCE sequence_name
+START WITH start_value
+INCREMENT BY increment_value
+MAXVALUE max_value
+MINVALUE min_value
+CYCLE | NOCYCLE
+CACHE cache_size;
+<br><br>
+EXAMPLE
+CREATE SEQUENCE customer_seq
+START WITH 1001
+INCREMENT BY 1
+MAXVALUE 9999
+NOCYCLE
+CACHE 10;
+<br><br>
+112) DECLARE
+  v_deptno NUMBER;
+BEGIN
+ v_deptno := &Enter_deptno;
+FOR emp IN (SELECT * FROM employees WHERE department_id = v_deptno)
+  LOOP
+ DBMS_OUTPUT.PUT_LINE('Employee ID: ' || emp.employee_id || ', Name: ' || emp.first_name || ' ' || emp.last_name || ', Job: ' || emp.job_id || ', Salary: ' || emp.salary);
+  END LOOP;
+END;
+<br><br>
+113) -- Syntax for creating a user-defined data type
+CREATE TYPE type_name AS OBJECT (
+  attribute_name1 datatype,
+  attribute_name2 datatype,
+  ...
+);
+<br><br>
+CREATE TYPE address_t AS OBJECT (
+  street varchar2(50),
+  city varchar2(50),
+  state varchar2(2),
+  zip varchar2(10)
+);<br><br>
+CREATE TABLE customers (
+  customer_id number,
+  name varchar2(50),
+  address address_t
+);<br><br>
+<br><br>
+114) CREATE SEQUENCE my_seq START WITH 1 INCREMENT BY 1;
+<br><br>
+CREATE TABLE table1 (
+  id NUMBER DEFAULT my_seq.NEXTVAL,
+  name VARCHAR2(50),
+  age NUMBER
+);
+<br><br>
+CREATE TABLE table2 (
+  id NUMBER DEFAULT my_seq.NEXTVAL,
+  address VARCHAR2(100),
+  phone VARCHAR2(20)
+);<br><br>
+
+CREATE TABLE table3 (
+  id NUMBER DEFAULT my_seq.NEXTVAL,
+  email VARCHAR2(50),
+  department VARCHAR2(50)
+);
+<br><br>
+115) EQUI-JOIN
+CREATE TABLE employees (
+  id NUMBER,
+  name VARCHAR2(50),
+  department_id NUMBER
+);<br><br>
+CREATE TABLE departments (
+  id NUMBER,
+  name VARCHAR2(50)
+);<br><br>
+
+SELECT employees.id, employees.name, departments.name AS department_name
+FROM employees
+JOIN departments
+ON employees.department_id = departments.id;
+<br><br>
+NON-EQUI JOIN
+CREATE TABLE sales (
+  id NUMBER,
+  region VARCHAR2(50),
+  quarter NUMBER,
+  amount NUMBER
+);<br><br>
+CREATE TABLE goals (
+  id NUMBER,
+  region VARCHAR2(50),
+  quarter NUMBER,
+  target NUMBER
+);
+<br><br>
+SELECT sales.id, sales.region, sales.quarter, sales.amount, goals.target
+FROM sales
+JOIN goals
+ON sales.region = goals.region
+AND sales.quarter = goals.quarter
+AND sales.amount > goals.target;
+<br><br>
+126) SELECT *
+FROM employees
+WHERE hire_date IN ('08-MAY-08', '08-DEC-03', '08-DEC-07', '80-JAN-09')
+ORDER BY hire_date ASC;
+<br><br>
+127) declare
+n number;
+i number;
+begin
+n:=&n;
+for i in 1..10
+loop
+dbms_output.put_line(n||' x '||i||' = '||n*i);
+end loop;
+end;
+/
+<br><br>
+128) Numeric functions are used to perform operations on numeric data types. Here are a few examples of numeric functions in SQL:
+ABS() - Returns the absolute value of a number.
+SELECT ABS(-10) AS absolute_value; -- Output: 10
+<br><br>
+CEIL() - Returns the smallest integer greater than or equal to a number.
+SELECT CEIL(3.14) AS ceil_value; -- Output: 4
+<br><br>
+FLOOR() - Returns the largest integer less than or equal to a number
+SELECT FLOOR(3.14) AS floor_value; -- Output: 3
+<br><br>
+ROUND() - Rounds a number to a specified number of decimal places.
+SELECT ROUND(3.141592, 2) AS rounded_value; -- Output: 3.14
+<br><br>
+Single-row subqueries are used to retrieve a single value from a table or view. Here's an example
+SELECT employee_name, salary
+FROM employees
+WHERE salary = (SELECT MAX(salary) FROM employees);
+<br><br>
+Multi-row subqueries are used to retrieve multiple values from a table or view. Here's an example:
+SELECT employee_name, department_id
+FROM employees<br>
+WHERE department_id IN (SELECT department_id FROM departments WHERE location_id = 1700);
+<br><br>
+131) SELECT *
+FROM employees
+WHERE EXTRACT(YEAR FROM hire_date) LIKE '198%';
+<br><br>
+132) SELECT *
+FROM employees
+WHERE empno NOT LIKE '78%';
+<br><br>
+133) SELECT *
+FROM employees
+WHERE sal = (SELECT sal FROM employees WHERE ename = 'FORD');
+<br><br>
+134) SELECT *
+FROM employees
+WHERE deptno=30 and sal = (SELECT MAX(sal) FROM employees WHERE deptno = 30);
+<br><br>
+138) SELECT job, SUM(sal * 12) as total_annual_salary
+FROM employees
+WHERE hiredate BETWEEN '01-JAN-88' AND '31-DEC-88'
+GROUP BY job;
+<br><br>
+140) DECLARE
+  v_empno employees.empno%TYPE;
+  v_ename employees.ename%TYPE;
+  v_sal employees.sal%TYPE;
+BEGIN
+  SELECT empno, ename, sal
+  INTO v_empno, v_ename, v_sal
+  FROM employees
+  WHERE empno = 100;
+  DBMS_OUTPUT.PUT_LINE('Employee ' || v_ename || ', with employee number ' || v_empno || ', has a salary of ' || v_sal);
+END;
+<br><br>
+142) DECLARE
+  v_emp employees%ROWTYPE;
+BEGIN
+  SELECT *
+  INTO v_emp
+  FROM employees
+  WHERE empno = 100;
+  DBMS_OUTPUT.PUT_LINE('Employee ' || v_emp.ename || ', with employee number ' || v_emp.empno || ', has a salary of ' || v_emp.sal);
+END;
+<br><br>
+143) SELECT grade, COUNT(empno) AS num_emps, MAX(sal) AS max_sal
+FROM employees
+GROUP BY grade;
+<br><br>
+</body>
+</html>
